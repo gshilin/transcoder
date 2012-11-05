@@ -1,0 +1,23 @@
+%h3 Supported requests
+%div mod_get_slots
+%div mod_remove_slot 3
+%div ## doesn't work transcoder.mod_get_net_config 3
+%div ## doesn't work transcoder.mod_slot_get_status 3
+%div mod_get_slot 3
+%div mod_slot_stop 3
+%div mod_create_slot 3, 1, 2, [[3, 0, 0, 0], [101, 1, 20, 0]]
+%div mod_slot_restart 3, '192.168.1.2', 3000, '192.168.1.2', 3000, 1, [1]
+%hr
+
+%form{:action => '/perform', :method => :post}
+  %label{:for => 'host'} Host:
+  %input{:type => 'text', :name => 'host', :value => params[:host]}
+  %label{:for => 'port'} Port:
+  %input{:type => 'text', :name => 'port', :value => params[:port]}
+  %br
+  %label{:for => 'q'} Request:
+  %input{:type => 'text', :name => 'q', :value => params[:q]}
+  %input{:type => 'submit'}
+
+- if @result
+  = show @result

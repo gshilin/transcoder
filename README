@@ -1,0 +1,3 @@
+0. On machine with installed ruby and gem 'bundler' run 'git clone'
+1. bundle install
+2. ruby transcoder.rb
