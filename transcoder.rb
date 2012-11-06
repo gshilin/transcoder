@@ -11,17 +11,8 @@ get '/' do
 end
 
 post '/perform' do
-  transcoder = Transcode.new(host: params[:host], port: params[:port])
-  @result = transcoder.instance_eval(params[:q])
-  haml :form
+  @result = eval "Transcode.new(host: '#{params[:host]}', port: #{params[:port].to_i}) { #{params[:q].gsub(/\r\n/, "\;")}  }"
+  haml :ajax
 end
 
-def show(json)
-  command = json.delete(:command)
-  response = json.delete(:response)
-  output = "Error: #{json[:error]}<br/>" + "Message: #{json[:message]}<br/>"
-  (json[:result] || []).each {|h, v|
-    output += "#{h}: #{v}<br/>"
-  }
-  output
-end
+

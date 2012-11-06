@@ -1,23 +1,41 @@
-%h3 Supported requests
-%div mod_get_slots
-%div mod_remove_slot 3
-%div ## doesn't work transcoder.mod_get_net_config 3
-%div ## doesn't work transcoder.mod_slot_get_status 3
-%div mod_get_slot 3
-%div mod_slot_stop 3
-%div mod_create_slot 3, 1, 2, [[3, 0, 0, 0], [101, 1, 20, 0]]
-%div mod_slot_restart 3, '192.168.1.2', 3000, '192.168.1.2', 3000, 1, [1]
-%hr
+!!! 5
+%html
+  %head
+    %link{rel: 'stylesheet', type: 'text/css', href: '/stylesheets/style.css'}
+    %script{type: 'text/javascript', src: '/javascripts/jquery-1.8.2.min.js'}
+    %script{type: 'text/javascript', src: '/javascripts/jquery-ui-1.9.1.custom.min.js'} # highlight only
+    %script{type: 'text/javascript', src: '/javascripts/application.js'}
+  %body
+    %h3 Supported requests
+    %div mod_get_slots
+    %div mod_remove_slot 3
+    %div ## doesn't work transcoder.mod_get_net_config 3
+    %div ## doesn't work transcoder.mod_slot_get_status 3
+    %div mod_get_slot 3
+    %div mod_slot_stop 3
+    %div mod_create_slot 3, 1, 2, [[3, 0, 0, 0], [101, 1, 20, 0]]
+    %div mod_slot_restart 3, '192.168.1.2', 3000, '192.168.1.2', 3000, 1, [1]
+    %div mod_slot_get_status 3
+    %hr
 
-%form{:action => '/perform', :method => :post}
-  %label{:for => 'host'} Host:
-  %input{:type => 'text', :name => 'host', :value => params[:host]}
-  %label{:for => 'port'} Port:
-  %input{:type => 'text', :name => 'port', :value => params[:port]}
-  %br
-  %label{:for => 'q'} Request:
-  %input{:type => 'text', :name => 'q', :value => params[:q]}
-  %input{:type => 'submit'}
+    %form#perform{:action => '/perform', :method => :post}
+      #commands
+        %input#show_output{type: 'checkbox', name: 'show_output', value: 1}
+        %label{for: 'show_output'} show/hide output
+        %input#show_command{type: 'checkbox', name: 'show_command', value: 2}
+        %label{for: 'show_command'} show/hide command
+        %input#show_response{type: 'checkbox', name: 'show_response', value: 3}
+        %label{for: 'show_response'} show/hide response
+        %hr
+      %label{for: 'host'} Host:
+      %input{type: 'text', name: 'host', value: params[:host]}
+      %label{for: 'port'} Port:
+      %input{type: 'text', name: 'port', value: params[:port]}
+      %br
+      %label{for: 'q'} Request:
+      %textarea{name: 'q', :cols => 80, :rows => 5}= params[:q]
+      %input{type: 'submit'}
+      %input#clear-log{type: 'button', value: 'Clear Log'}
+      %img#ajax-loader{src: '/images/ajax-loader.gif', style: 'display: none;'}
 
-- if @result
-  = show @result
+    #results
