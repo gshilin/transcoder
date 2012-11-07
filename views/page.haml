@@ -13,8 +13,9 @@
     %div ## doesn't work transcoder.mod_slot_get_status 3
     %div mod_get_slot 3
     %div mod_slot_stop 3
+    %div mod_restart
     %div mod_create_slot 3, 1, 2, [[3, 0, 0, 0], [101, 1, 20, 0]]
-    %div mod_slot_restart 3, '192.168.1.2', 3000, '192.168.1.2', 3000, 1, [1]
+    %div mod_slot_restart 3, '192.168.1.2', 3000, '192.168.1.2', 3000, 2, [0, 1]
     %div mod_slot_get_status 3
     %hr
 

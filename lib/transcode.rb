@@ -19,7 +19,7 @@ class Transcode
   MOD_GET_SLOTS = 1
   MOD_GET_NET_CONFIG = 2
   MOD_SET_NET_CONFIG = 3
-  MOD_MOD_RESTART = 4
+  MOD_RESTART = 4
   MOD_CREATE_SLOT = 5
   MOD_REMOVE_SLOT = 6
   MOD_GET_SLOT = 7
@@ -113,7 +113,7 @@ class Transcode
   end
 
   def mod_restart
-    error, response, real_command = send_request('C', MOD_RESTART)
+    error, response, command = send_request('C', MOD_RESTART)
     ret = {func: 'mod_restart', error: error, message: response, command: command, response: response}
     @results << ret and return ret if error != RET_OK
 
@@ -178,7 +178,7 @@ class Transcode
     ret = {func: 'mod_slot_get_status', error: error, message: response, command: command, response: response}
     @results << ret and return ret if error != RET_OK
 
-    unpacked = response.unpack('CCCNNNNNCC*')
+    unpacked = response.unpack('CCCNNnNnCC*')
     response_code, slot_status, signal, uptime, ip1, port1, ip2, port2, tracks_cnt, tracks =
         [unpacked[0], unpacked[1], unpacked[2], unpacked[3], unpacked[4], unpacked[5], unpacked[6], unpacked[7], unpacked[8], unpacked[9..-1]]
     ret[:error] = response_code
@@ -186,13 +186,16 @@ class Transcode
     @results << ret and return ret if response_code != RET_OK
 
     ret[:error] = RET_OK
-    ret[:message] = "Slot is stopped"
-    @results << ret and return ret if slot_status == SLOT_STOPPED
+    if slot_status == SLOT_STOPPED
+      ret[:message] = "Slot is stopped"
+      @results << ret and return ret
+    end
 
     ip1 = IPAddr.new ip1, Socket::AF_INET
     ip2 = IPAddr.new ip2, Socket::AF_INET
     tracks = tracks[0... tracks_cnt]
 
+    ret[:message] = "Slot is running"
     ret[:result] = {signal: signal, uptime: uptime, ip1: ip1.to_s, port1: port1, ip2: ip2.to_s, port2: port2, total_tracks: tracks_cnt, tracks: tracks}
 
     @results << ret
@@ -215,7 +218,7 @@ class Transcode
   def mod_slot_restart(slot_id, ip1, port1, ip2, port2, tracks_cnt, tracks)
     ip1 = IPAddr.new ip1, Socket::AF_INET
     ip2 = IPAddr.new ip2, Socket::AF_INET
-    error, response, command = send_request('CCCNNNNCC*', MOD_SLOT_CMD, slot_id, CMD_SLOT_RESTART, ip1.to_i, port1, ip2.to_i, port2, tracks_cnt, tracks)
+    error, response, command = send_request('CCCNnNnCC*', MOD_SLOT_CMD, slot_id, CMD_SLOT_RESTART, ip1.to_i, port1, ip2.to_i, port2, tracks_cnt, tracks)
     ret = {func: 'mod_slot_restart', error: error, message: response, command: command, response: response}
     @results << ret and return ret if error != RET_OK
 
