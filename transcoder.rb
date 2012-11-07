@@ -17,7 +17,7 @@ end
 
 post '/perform' do
   start = Time.now
-  @result = eval "Transcode.new(host: '#{params[:host].empty? ? TRANSCODER_HOST : params[:host]}', port: #{params[:port].empty? ? TRANSCODER_PORT : params[:port]}) { #{params[:q].gsub(/\r\n/, "\;")}  }"
+  @result = eval "Transcode.new(host: '#{params[:host].empty? ? TRANSCODER_HOST : params[:host]}', port: #{params[:port].empty? ? TRANSCODER_PORT : params[:port]}) { #{params[:q]}  }"
   duration = Time.now - start
   headers 'X-Runtime-Seconds' => duration.to_s
   haml :ajax
