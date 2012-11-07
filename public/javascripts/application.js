@@ -10,7 +10,7 @@ $(function () {
             if ($('#show_command').is(':checked')) { $('.command').show(); }
             if ($('#show_response').is(':checked')) { $('.response').show(); }
 
-            $('#results').effect('highlight');
+            $('#results').effect('highlight', 'slow');
             $('#ajax-loader').hide();
         });
 
